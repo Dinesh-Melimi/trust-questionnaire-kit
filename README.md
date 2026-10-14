@@ -26,4 +26,22 @@ Commitments made to Acme CPA:
   - Do not use customer data to train AI models
 ```
 
+## Keep the KB growing
+
+```bash
+python -m tqk.cli --library samples/library.json --questions samples/questionnaire.csv \
+  --drafts drafts.json --owner security-team --kb-report
+```
+
+```
+1 draft KB entry written to drafts.json (owner: security-team)
+Review queue (next 30 days): 1
+  VM-01 OVERDUE 2026-03-10
+SOC 2 coverage: CC6(2)
+```
+
+- **Draft entries**: every question the library could not answer becomes a draft KB entry with an owner, so the next RFP reuses a reviewed answer instead of starting over
+- **Review queue**: answers expiring in the next 30 days, so reviews happen before a deal is waiting on them
+- **SOC 2 coverage**: which Trust Services Criteria have approved answers
+
 The library is plain JSON, so it can be kept in Git with review on every change, or exported from a GRC platform such as Vanta or Drata.

@@ -10,8 +10,7 @@ import re
 from collections import Counter
 from datetime import date, timedelta
 
-STOP = set("a an the of to and or for in on is are be do does your you we our with by any how what which "
-           "please describe provide have has it that this as at from all if there".split())
+STOP = set(["a", "an", "the", "of", "to", "and", "or", "for", "in", "on", "is", "are", "be", "do", "does", "your", "you", "we", "our", "with", "by", "any", "how", "what", "which", "please", "describe", "provide", "have", "has", "it", "that", "this", "as", "at", "from", "all", "if", "there"])
 SYN = {"mfa": "multifactor", "2fa": "multifactor", "multi": "multifactor", "factor": "multifactor",
        "encrypted": "encryption", "encrypt": "encryption", "pentest": "penetration", "pen": "penetration",
        "soc2": "soc", "vulnerabilities": "vulnerability", "logs": "logging", "log": "logging",
