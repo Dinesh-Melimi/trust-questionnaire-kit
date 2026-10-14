@@ -1,0 +1,17 @@
+[
+ {"id":"AC-01","questions":["Do you enforce multi-factor authentication for all users?","Is MFA required for employee and admin access?"],"tags":["mfa","sso","access"],
+  "answer":"Yes. All workforce access goes through SSO with phishing-resistant MFA enforced; admin access requires hardware keys.","evidence":"SOC 2 CC6.1; IdP policy export","last_reviewed":"2026-08-01"},
+ {"id":"EN-01","questions":["Is customer data encrypted at rest and in transit?"],"tags":["encryption","tls","aes"],
+  "answer":"Yes. Data is encrypted at rest with AES-256 via cloud KMS and in transit with TLS 1.2+.","evidence":"SOC 2 CC6.7; KMS key policy","last_reviewed":"2026-07-15"},
+ {"id":"VM-01","questions":["Do you perform annual third-party penetration testing?","When was your last pentest?"],"tags":["penetration","pentest"],
+  "answer":"Yes. An independent firm performs a penetration test at least annually; the executive summary is available under NDA.","evidence":"2026 pentest letter","last_reviewed":"2025-03-10",
+  "commitment":"Share the annual pentest summary under NDA on request"},
+ {"id":"IR-01","questions":["Do you have an incident response plan?","How will you notify us of a security incident affecting our data?"],"tags":["incident","breach","notification"],
+  "answer":"Yes. Our incident response plan is tested annually, and affected customers are notified within 72 hours of a confirmed incident.","evidence":"IR plan v3; tabletop report","last_reviewed":"2026-09-01",
+  "commitment":"Notify within 72 hours of a confirmed incident affecting customer data"},
+ {"id":"CP-01","questions":["Are you SOC 2 Type II certified?","Can you provide your SOC 2 report?"],"tags":["soc","audit","compliance"],
+  "answer":"Yes. We complete an annual SOC 2 Type II audit covering Security, Availability and Confidentiality; the report is available under NDA.","evidence":"SOC 2 Type II report","last_reviewed":"2026-06-30"},
+ {"id":"AI-01","questions":["Is customer data used to train AI models?","How do you secure AI features?"],"tags":["ai","llm","model","training"],
+  "answer":"No. Customer data is not used to train models. AI features run with zero data retention at the model provider and are tested for prompt injection.","evidence":"AI usage policy; vendor DPA","last_reviewed":"2026-09-20",
+  "commitment":"Do not use customer data to train AI models"}
+]

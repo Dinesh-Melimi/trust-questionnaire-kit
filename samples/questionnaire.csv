@@ -1,0 +1,8 @@
+id,question
+1,Is 2FA/MFA enforced for all personnel accessing production systems?
+2,Please describe how customer data is encrypted at rest and in transit.
+3,Has a third-party pen test been performed in the last 12 months?
+4,What is your process and timeline for notifying customers of a breach?
+5,Do you hold a current SOC2 Type 2 report?
+6,Is our data used to train your AI or LLM models?
+7,Do you maintain a software bill of materials (SBOM) for your application?
