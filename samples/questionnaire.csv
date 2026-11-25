@@ -6,3 +6,6 @@ id,question
 5,Do you hold a current SOC2 Type 2 report?
 6,Is our data used to train your AI or LLM models?
 7,Do you maintain a software bill of materials (SBOM) for your application?
+8,Is all customer data deleted within 30 days?
+9,Do you have BAAs in place with every sub-processor that handles PHI?
+10,How quickly is access removed when an employee leaves?

@@ -8,7 +8,49 @@ from .core import answer, commitments, load_library, load_questions
 from .kb import coverage, gap_drafts, review_queue
 
 
+def audit(argv):
+    import os
+    from . import access_review, checks, evidence, report, retention
+    ap = argparse.ArgumentParser(prog="tqk audit", description="Run control checks, triage findings, write evidence and a report.")
+    ap.add_argument("--controls", default="samples/controls.json")
+    ap.add_argument("--env", default="samples/env.json", help="Exported snapshot of Okta, AWS, GitHub, HR, vendors")
+    ap.add_argument("--library", default="samples/library.json")
+    ap.add_argument("--questions", default="samples/questionnaire.csv")
+    ap.add_argument("--retention-days", type=int, default=30, help="Retention a customer is asking about")
+    ap.add_argument("--company", default="Acme Voice (sample)")
+    ap.add_argument("--out", default="build")
+    ap.add_argument("--today")
+    a = ap.parse_args(argv)
+    env = checks.load(a.env)
+    today = date.fromisoformat(a.today or env.get("snapshot_date") or date.today().isoformat())
+    results = checks.run(checks.load(a.controls), env, today)
+    queue = checks.triage(results)
+    status = {r["id"]: r["status"] for r in results}
+    qrows = answer(load_questions(a.questions), load_library(a.library), today, control_status=status)
+    campaign, flags = access_review.build_campaign(env)
+    removals = access_review.verify_removals(env)
+    ret = {**retention.answer_retention(env, a.retention_days), "asked": a.retention_days}
+    os.makedirs(a.out, exist_ok=True)
+    evidence.write_pack(results, a.out, today.isoformat())
+    html = report.render(results, queue, evidence.framework_view(results), campaign, flags, removals, ret, qrows,
+                         today.isoformat(), a.company)
+    with open(os.path.join(a.out, "index.html"), "w") as f:
+        f.write(html)
+    fails = sum(r["status"] == "fail" for r in results)
+    print(f"{len(results) - fails}/{len(results)} controls passing; {len(queue)} findings")
+    for f in queue:
+        print(f"  {f['priority']} {f['control']:5} {f['message']}")
+    held = [r for r in qrows if r["status"].startswith("HOLD")]
+    print(f"Questionnaire: {sum(r['status'] == 'Ready' for r in qrows)}/{len(qrows)} ready, {len(held)} held because a linked control is failing")
+    print(f"Retention ({a.retention_days} days): {ret['verdict']}")
+    print(f"Report: {os.path.join(a.out, 'index.html')}  Evidence: {os.path.join(a.out, 'evidence')}")
+    return 1 if any(f["priority"] == "P0" for f in queue) else 0
+
+
 def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] == "audit":
+        return audit(argv[1:])
     ap = argparse.ArgumentParser(description="Draft security questionnaire answers from an approved library.")
     ap.add_argument("--library", required=True)
     ap.add_argument("--questions", required=True, help="CSV with columns id,question")

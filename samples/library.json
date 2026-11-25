@@ -1,17 +1,175 @@
 [
- {"id":"AC-01","questions":["Do you enforce multi-factor authentication for all users?","Is MFA required for employee and admin access?"],"tags":["mfa","sso","access"],
-  "answer":"Yes. All workforce access goes through SSO with phishing-resistant MFA enforced; admin access requires hardware keys.","evidence":"SOC 2 CC6.1; IdP policy export","last_reviewed":"2026-08-01"},
- {"id":"EN-01","questions":["Is customer data encrypted at rest and in transit?"],"tags":["encryption","tls","aes"],
-  "answer":"Yes. Data is encrypted at rest with AES-256 via cloud KMS and in transit with TLS 1.2+.","evidence":"SOC 2 CC6.7; KMS key policy","last_reviewed":"2026-07-15"},
- {"id":"VM-01","questions":["Do you perform annual third-party penetration testing?","When was your last pentest?"],"tags":["penetration","pentest"],
-  "answer":"Yes. An independent firm performs a penetration test at least annually; the executive summary is available under NDA.","evidence":"2026 pentest letter","last_reviewed":"2025-03-10",
-  "commitment":"Share the annual pentest summary under NDA on request"},
- {"id":"IR-01","questions":["Do you have an incident response plan?","How will you notify us of a security incident affecting our data?"],"tags":["incident","breach","notification"],
-  "answer":"Yes. Our incident response plan is tested annually, and affected customers are notified within 72 hours of a confirmed incident.","evidence":"IR plan v3; tabletop report","last_reviewed":"2026-09-01",
-  "commitment":"Notify within 72 hours of a confirmed incident affecting customer data"},
- {"id":"CP-01","questions":["Are you SOC 2 Type II certified?","Can you provide your SOC 2 report?"],"tags":["soc","audit","compliance"],
-  "answer":"Yes. We complete an annual SOC 2 Type II audit covering Security, Availability and Confidentiality; the report is available under NDA.","evidence":"SOC 2 Type II report","last_reviewed":"2026-06-30"},
- {"id":"AI-01","questions":["Is customer data used to train AI models?","How do you secure AI features?"],"tags":["ai","llm","model","training"],
-  "answer":"No. Customer data is not used to train models. AI features run with zero data retention at the model provider and are tested for prompt injection.","evidence":"AI usage policy; vendor DPA","last_reviewed":"2026-09-20",
-  "commitment":"Do not use customer data to train AI models"}
+ {
+  "id": "AC-01",
+  "questions": [
+   "Do you enforce multi-factor authentication for all users?",
+   "Is MFA required for employee and admin access?"
+  ],
+  "tags": [
+   "mfa",
+   "sso",
+   "access"
+  ],
+  "answer": "Yes. All workforce access goes through SSO with phishing-resistant MFA enforced; admin access requires hardware keys.",
+  "evidence": "SOC 2 CC6.1; IdP policy export",
+  "last_reviewed": "2026-08-01",
+  "controls": [
+   "AC-1"
+  ]
+ },
+ {
+  "id": "EN-01",
+  "questions": [
+   "Is customer data encrypted at rest and in transit?"
+  ],
+  "tags": [
+   "encryption",
+   "tls",
+   "aes"
+  ],
+  "answer": "Yes. Data is encrypted at rest with AES-256 via cloud KMS and in transit with TLS 1.2+.",
+  "evidence": "SOC 2 CC6.7; KMS key policy",
+  "last_reviewed": "2026-07-15",
+  "controls": [
+   "EN-1",
+   "EN-2"
+  ]
+ },
+ {
+  "id": "VM-01",
+  "questions": [
+   "Do you perform annual third-party penetration testing?",
+   "When was your last pentest?"
+  ],
+  "tags": [
+   "penetration",
+   "pentest"
+  ],
+  "answer": "Yes. An independent firm performs a penetration test at least annually; the executive summary is available under NDA.",
+  "evidence": "2026 pentest letter",
+  "last_reviewed": "2025-03-10",
+  "commitment": "Share the annual pentest summary under NDA on request"
+ },
+ {
+  "id": "IR-01",
+  "questions": [
+   "Do you have an incident response plan?",
+   "How will you notify us of a security incident affecting our data?"
+  ],
+  "tags": [
+   "incident",
+   "breach",
+   "notification"
+  ],
+  "answer": "Yes. Our incident response plan is tested annually, and affected customers are notified within 72 hours of a confirmed incident.",
+  "evidence": "IR plan v3; tabletop report",
+  "last_reviewed": "2026-09-01",
+  "commitment": "Notify within 72 hours of a confirmed incident affecting customer data",
+  "controls": [
+   "LG-1"
+  ]
+ },
+ {
+  "id": "CP-01",
+  "questions": [
+   "Are you SOC 2 Type II certified?",
+   "Can you provide your SOC 2 report?"
+  ],
+  "tags": [
+   "soc",
+   "audit",
+   "compliance"
+  ],
+  "answer": "Yes. We complete an annual SOC 2 Type II audit covering Security, Availability and Confidentiality; the report is available under NDA.",
+  "evidence": "SOC 2 Type II report",
+  "last_reviewed": "2026-06-30"
+ },
+ {
+  "id": "AI-01",
+  "questions": [
+   "Is customer data used to train AI models?",
+   "How do you secure AI features?"
+  ],
+  "tags": [
+   "ai",
+   "llm",
+   "model",
+   "training"
+  ],
+  "answer": "No. Customer data is not used to train models. AI features run with zero data retention at the model provider and are tested for prompt injection.",
+  "evidence": "AI usage policy; vendor DPA",
+  "last_reviewed": "2026-09-20",
+  "commitment": "Do not use customer data to train AI models",
+  "controls": [
+   "VD-2"
+  ]
+ },
+ {
+  "id": "RT-01",
+  "questions": [
+   "What is your data retention policy?",
+   "Is all customer data deleted within 30 days?",
+   "How long do you keep call recordings and transcripts?"
+  ],
+  "tags": [
+   "retention",
+   "deletion",
+   "delete",
+   "recordings",
+   "transcripts",
+   "days"
+  ],
+  "answer": "Call recordings and transcripts are deleted after the retention period the customer configures (default 30 days). Backups roll off on a fixed schedule after that, and sub-processors delete under their agreements.",
+  "evidence": "SOC 2 C1.2; S3 lifecycle rules; retention policy",
+  "last_reviewed": "2026-10-01",
+  "controls": [
+   "RT-1"
+  ],
+  "commitment": "Delete recordings and transcripts within the configured retention period"
+ },
+ {
+  "id": "SP-01",
+  "questions": [
+   "Do you have BAAs with sub-processors that handle PHI?",
+   "Please list your sub-processors.",
+   "Which third parties process our call data?"
+  ],
+  "tags": [
+   "subprocessor",
+   "baa",
+   "vendor",
+   "phi",
+   "third",
+   "party",
+   "hipaa"
+  ],
+  "answer": "Yes. Every sub-processor that handles call audio or transcripts is under a DPA and a BAA. The current list is published in our trust center.",
+  "evidence": "SOC 2 CC9.2; vendor register; signed BAAs",
+  "last_reviewed": "2026-09-15",
+  "controls": [
+   "VD-1"
+  ]
+ },
+ {
+  "id": "AR-01",
+  "questions": [
+   "Do you perform periodic user access reviews?",
+   "How quickly is access removed when an employee leaves?"
+  ],
+  "tags": [
+   "access",
+   "review",
+   "offboarding",
+   "terminated",
+   "leaver",
+   "deprovisioning"
+  ],
+  "answer": "Yes. Access is reviewed every quarter by each manager, and leavers are deprovisioned in the identity provider within 24 hours of their last day.",
+  "evidence": "SOC 2 CC6.2, CC6.3; access review export",
+  "last_reviewed": "2026-11-10",
+  "controls": [
+   "AC-2",
+   "AC-3"
+  ]
+ }
 ]

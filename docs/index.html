@@ -1,0 +1,79 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>Audit Readiness</title><style>:root{--bg:#f7f7f5;--fg:#1d1d1b;--mute:#6b6b66;--card:#fff;--line:#e3e2dc;--p0:#b42318;--p1:#b54708;--p2:#5d6b82;--ok:#067647}
+@media (prefers-color-scheme:dark){:root{--bg:#141413;--fg:#ecebe6;--mute:#a3a29b;--card:#1f1f1d;--line:#33322e;--p0:#f97066;--p1:#fdb022;--p2:#98a2b3;--ok:#47cd89}}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 16px}h1{font-size:24px;margin:0 0 4px}h2{font-size:17px;margin:28px 0 8px}
+.mute{color:var(--mute)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}.card b{display:block;font-size:26px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}th{color:var(--mute);font-weight:600}
+.tag{font-weight:700;font-size:12px;padding:2px 7px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.P0,.fail{color:var(--p0)}.P1{color:var(--p1)}.P2,.review{color:var(--p2)}.pass{color:var(--ok)}
+.wrap{overflow-x:auto}ul{margin:6px 0 0 18px;padding:0}</style></head><body><main>
+<h1>Audit readiness: Acme Voice (sample)</h1><div class=mute>Snapshot 2026-11-25 · 12 controls mapped to SOC 2, ISO 27001 and HIPAA</div>
+<div class=cards>
+<div class=card><b class=pass>3</b>controls passing</div>
+<div class=card><b class=fail>9</b>controls failing</div>
+<div class=card><b class=P0>7</b>P0 · data exposed now</div>
+<div class=card><b class=P1>4</b>P1 · control gaps</div>
+<div class=card><b class=P2>3</b>P2 · noise / accepted</div></div>
+<h2>Work queue (fix in this order)</h2><div class=wrap><table><tr><th>Priority</th><th>Control</th><th>Owner</th><th>Finding</th></tr>
+<tr><td><span class="tag P0">P0</span></td><td>AC-1</td><td>IT</td><td>leo@acmevoice.ai can reach production without MFA</td></tr>
+<tr><td><span class="tag P0">P0</span></td><td>AC-2</td><td>IT</td><td>sam@acmevoice.ai left 2026-11-20 (5 days ago) and is still active in Okta with aws-prod, github, call-console</td></tr>
+<tr><td><span class="tag P0">P0</span></td><td>EN-1</td><td>Platform</td><td>call-exports-temp holds recordings without KMS encryption</td></tr>
+<tr><td><span class="tag P0">P0</span></td><td>EN-2</td><td>Platform</td><td>call-exports-temp is public and contains recordings</td></tr>
+<tr><td><span class="tag P0">P0</span></td><td>RT-1</td><td>Platform</td><td>call-exports-temp has no deletion rule, so that data is kept forever (we promise 30 days)</td></tr>
+<tr><td><span class="tag P0">P0</span></td><td>VD-1</td><td>Legal</td><td>Analytics warehouse receives transcripts (may contain PHI) without a BAA</td></tr>
+<tr><td><span class="tag P0">P0</span></td><td>VM-1</td><td>Engineering</td><td>CVE-2026-1101 (critical) on telephony-gateway open 24 days, SLA 15</td></tr>
+<tr><td><span class="tag P1">P1</span></td><td>AC-3</td><td>Security</td><td>review said revoke nina@acmevoice.ai from call-console but access is still there (approval is not proof of removal)</td></tr>
+<tr><td><span class="tag P1">P1</span></td><td>AC-4</td><td>Platform</td><td>role/support (a human role) can read call-exports-temp; route access through a logged break-glass path</td></tr>
+<tr><td><span class="tag P1">P1</span></td><td>RT-1</td><td>Platform</td><td>db-backups-prod keeps backups for 35 days, longer than the 30-day promise</td></tr>
+<tr><td><span class="tag P1">P1</span></td><td>RT-1</td><td>Platform</td><td>Analytics warehouse keeps transcripts for 90 days (promise is 30)</td></tr>
+<tr><td><span class="tag P2">P2</span></td><td>AC-1</td><td>IT</td><td>svc-ci@acmevoice.ai has no MFA but is a service account; confirm it uses key-based auth only</td></tr>
+<tr><td><span class="tag P2">P2</span></td><td>EN-2</td><td>Platform</td><td>marketing-site-assets is public by design (public-web); keep it on the allow-list</td></tr>
+<tr><td><span class="tag P2">P2</span></td><td>VM-1</td><td>Engineering</td><td>CVE-2026-0450 past SLA but has an approved exception until 2027-01-31 (owner priya@acmevoice.ai)</td></tr>
+</table></div><h2>Controls</h2><div class=wrap><table><tr><th>ID</th><th>Control</th><th>Status</th><th>SOC 2</th><th>ISO 27001</th><th>HIPAA</th></tr>
+<tr><td>AC-1</td><td>MFA enforced for all workforce accounts</td><td><span class="tag fail">FAIL</span></td><td>CC6.1</td><td>A.5.17</td><td>164.312(d)</td></tr>
+<tr><td>AC-2</td><td>Leavers lose access within 24 hours</td><td><span class="tag fail">FAIL</span></td><td>CC6.2</td><td>A.5.18</td><td>164.308(a)(3)(ii)(C)</td></tr>
+<tr><td>AC-3</td><td>Quarterly access review completed and removals verified</td><td><span class="tag fail">FAIL</span></td><td>CC6.3</td><td>A.5.18</td><td>164.308(a)(4)</td></tr>
+<tr><td>AC-4</td><td>Only call-processing services can read recordings</td><td><span class="tag fail">FAIL</span></td><td>CC6.1</td><td>A.8.3</td><td>164.312(a)(1)</td></tr>
+<tr><td>EN-1</td><td>Customer data stores encrypted at rest with KMS</td><td><span class="tag fail">FAIL</span></td><td>CC6.7</td><td>A.8.24</td><td>164.312(a)(2)(iv)</td></tr>
+<tr><td>EN-2</td><td>No customer data bucket is public</td><td><span class="tag fail">FAIL</span></td><td>CC6.6</td><td>A.8.3</td><td>164.312(e)(1)</td></tr>
+<tr><td>LG-1</td><td>Audit logging enabled in every account and region</td><td><span class="tag pass">PASS</span></td><td>CC7.2</td><td>A.8.15</td><td>164.312(b)</td></tr>
+<tr><td>RT-1</td><td>Recordings and transcripts deleted within the promised retention window</td><td><span class="tag fail">FAIL</span></td><td>C1.2</td><td>A.8.10</td><td>164.316(b)(2)</td></tr>
+<tr><td>VD-1</td><td>Every sub-processor touching call data has a signed BAA/DPA</td><td><span class="tag fail">FAIL</span></td><td>CC9.2</td><td>A.5.20</td><td>164.308(b)(1)</td></tr>
+<tr><td>VD-2</td><td>No customer call data used for model training without opt-in</td><td><span class="tag pass">PASS</span></td><td>P4.1</td><td>A.5.34</td><td>164.502(a)</td></tr>
+<tr><td>CM-1</td><td>Production branches require review before merge</td><td><span class="tag pass">PASS</span></td><td>CC8.1</td><td>A.8.32</td><td>-</td></tr>
+<tr><td>VM-1</td><td>Vulnerabilities fixed within SLA or have an approved exception</td><td><span class="tag fail">FAIL</span></td><td>CC7.1</td><td>A.8.8</td><td>164.308(a)(1)(ii)(B)</td></tr>
+</table></div><h2>Framework readiness</h2><div class=cards>
+<div class=card><b>3/12</b>SOC 2 requirements met</div>
+<div class=card><b>3/12</b>ISO 27001 requirements met</div>
+<div class=card><b>2/11</b>HIPAA requirements met</div>
+</div><h2>Security questionnaire draft</h2><div class=wrap><table><tr><th>#</th><th>Question</th><th>Status</th></tr>
+<tr><td>1</td><td>Is 2FA/MFA enforced for all personnel accessing production systems?</td><td class=P0>HOLD: linked control AC-1 failing today; answer must reflect current state</td></tr>
+<tr><td>2</td><td>Please describe how customer data is encrypted at rest and in transit.</td><td class=P0>HOLD: linked control EN-1, EN-2 failing today; answer must reflect current state</td></tr>
+<tr><td>3</td><td>Has a third-party pen test been performed in the last 12 months?</td><td class=P1>NEEDS REVIEW: answer last reviewed 2025-03-10</td></tr>
+<tr><td>4</td><td>What is your process and timeline for notifying customers of a breach?</td><td class=pass>Ready</td></tr>
+<tr><td>5</td><td>Do you hold a current SOC2 Type 2 report?</td><td class=pass>Ready</td></tr>
+<tr><td>6</td><td>Is our data used to train your AI or LLM models?</td><td class=pass>Ready</td></tr>
+<tr><td>7</td><td>Do you maintain a software bill of materials (SBOM) for your application?</td><td class=P1>NEEDS REVIEW: no approved answer</td></tr>
+<tr><td>8</td><td>Is all customer data deleted within 30 days?</td><td class=P0>HOLD: linked control RT-1 failing today; answer must reflect current state</td></tr>
+<tr><td>9</td><td>Do you have BAAs in place with every sub-processor that handles PHI?</td><td class=P0>HOLD: linked control VD-1 failing today; answer must reflect current state</td></tr>
+<tr><td>10</td><td>How quickly is access removed when an employee leaves?</td><td class=P0>HOLD: linked control AC-2, AC-3 failing today; answer must reflect current state</td></tr>
+</table></div><h2>“Is all our data deleted within 30 days?”</h2><div class=card><b style='font-size:16px'>Not fully today. Primary recordings and transcripts follow a 30-day rule, but 3 location(s) keep data longer. Do not answer &#x27;Yes&#x27; until these are fixed or the answer is approved by Legal with the real timeline.</b><ul>
+<li>recordings in call-recordings-prod (our storage): 30 days</li>
+<li>transcripts in transcripts-prod (our storage): 30 days</li>
+<li>backups in db-backups-prod (our storage): 35 days</li>
+<li>recordings in call-exports-temp (our storage): no deletion rule</li>
+<li>recordings in Speech-to-text vendor (sub-processor): not stored</li>
+<li>transcripts in LLM provider (sub-processor): 30 days</li>
+<li>transcripts in Analytics warehouse (sub-processor): 90 days</li>
+</ul></div><h2>Access review</h2><div class=cards>
+<div class=card><b>5</b>to review: priya@acmevoice.ai</div>
+<div class=card><b>2</b>to review: omar@acmevoice.ai</div>
+<div class=card><b>4</b>to review: ceo@acmevoice.ai</div>
+</div><div class=wrap><table><tr><th>Account</th><th>Flagged before review</th></tr>
+<tr><td>sam@acmevoice.ai</td><td>left 2026-11-20, remove now (do not wait for review)</td></tr>
+<tr><td>svc-ci@acmevoice.ai</td><td>service account: needs a named owner</td></tr>
+</table></div><p></p><div class=wrap><table><tr><th>Revoke decision</th><th>App</th><th>Verified in Okta</th></tr>
+<tr><td>nina@acmevoice.ai</td><td>call-console</td><td class=P1>still has access</td></tr>
+</table></div><p class=mute>Evidence for every control is saved under evidence/&lt;control&gt;/&lt;date&gt;.json with SHA-256 hashes in evidence/manifest.json.</p></main></body></html>

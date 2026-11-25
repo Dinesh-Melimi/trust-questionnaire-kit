@@ -52,7 +52,10 @@ def stale(entry, today, max_age_days=365):
     return (today - reviewed) > timedelta(days=max_age_days)
 
 
-def answer(questions, library, today, threshold=0.35):
+def answer(questions, library, today, threshold=0.35, control_status=None):
+    """control_status: optional {control_id: 'pass'|'fail'|'review'} from tqk.checks.run.
+    An answer linked to a failing control is held for review, so we never send a 'Yes' that is false today."""
+    control_status = control_status or {}
     rows = []
     for q in questions:
         score, e = library.match(q["question"])
@@ -65,6 +68,9 @@ def answer(questions, library, today, threshold=0.35):
             status = f"NEEDS REVIEW: answer last reviewed {e['last_reviewed']}"
         elif score < 0.55:
             status = "Check match"
+        failing = [c for c in e.get("controls", []) if control_status.get(c) == "fail"]
+        if failing:
+            status = f"HOLD: linked control {', '.join(failing)} failing today; answer must reflect current state"
         rows.append({**q, "answer": e["answer"], "evidence": e.get("evidence", ""),
                      "confidence": round(score, 2), "status": status, "commitment": e.get("commitment", ""),
                      "answer_id": e["id"]})
